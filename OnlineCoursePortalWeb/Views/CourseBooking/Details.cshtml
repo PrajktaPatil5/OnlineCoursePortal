@@ -1,0 +1,23 @@
+﻿@model OnlineCoursePortalWeb.Models.DetailsOfBooking
+
+@{
+    ViewData["Title"] = "Details";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h1>Details</h1>
+
+<div>
+    <h4>DetailsOfBooking</h4>
+</div>
+
+    <div><b>CourseName: </b> @Model.Course.CourseName</div>
+    <div><b>CourseDescription: </b> @Model.Course.CourseDescription</div>
+    <div><b>StartDate: </b> @Model.Course.StartDate </div>
+    <div><b>EndDate: </b> @Model.Course.EndDate </div>
+    <div><b>AvailableSeats: </b> @Model.Course.AvailableSeats</div>
+
+<div>
+    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+    <a asp-action="Index">Back to List</a>
+</div>
