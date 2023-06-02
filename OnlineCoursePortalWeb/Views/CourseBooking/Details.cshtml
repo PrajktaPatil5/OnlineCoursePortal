@@ -9,15 +9,41 @@
 
 <div>
     <h4>DetailsOfBooking</h4>
-</div>
+    <div class="row">
+        <div class="col">
+        
 
-    <div><b>CourseName: </b> @Model.Course.CourseName</div>
-    <div><b>CourseDescription: </b> @Model.Course.CourseDescription</div>
-    <div><b>StartDate: </b> @Model.Course.StartDate </div>
-    <div><b>EndDate: </b> @Model.Course.EndDate </div>
-    <div><b>AvailableSeats: </b> @Model.Course.AvailableSeats</div>
+        <div><b>CourseName: </b> @Model.Course.CourseName</div>
+        <div><b>CourseDescription: </b> @Model.Course.CourseDescription</div>
+        <div><b>StartDate: </b> @Model.Course.StartDate </div>
+        <div><b>EndDate: </b> @Model.Course.EndDate </div>
+        <div><b>AvailableSeats: </b> @Model.Course.AvailableSeats</div>
+
+    </div>
+       
+<div class="col">
+
+<div><b>Name : </b> @Model.ApplicationUserViewModel.Name</div>
+<div><b>Email: </b> @Model.ApplicationUserViewModel.Email</div>
+
+
+    </div></div>
+    </div>
+
+
+
+<div class="p-5">
+    <div class="row">
+        <div class="col p-3 text-end">
+            <a type="button" class="btn btn-success" asp-action="Updatebyid" asp-route-id=" @ViewData["Bookid"]" asp-action="">Approve</a>
+        </div>
+        <div class="col p-3">
+            <a type="button" class="btn btn-danger" asp-controller="CourseBooking" asp-action="UpdatebyidReject" asp-route-id=" @ViewData["Bookid"]" asp-action="Index">Reject</a>
+        </div>
+    </div>
+</div>
 
 <div>
-    @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
-    <a asp-action="Index">Back to List</a>
+    <a type="button" class="btn btn-primary" asp-action="Index">Back to List</a>
 </div>
+

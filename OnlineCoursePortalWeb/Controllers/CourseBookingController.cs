@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+
 using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services;
 using OnlineCoursePortalWeb.Services.IServices;
@@ -8,6 +9,8 @@ using System.Data;
 
 namespace OnlineCoursePortalWeb.Controllers
 {
+    //[Area("Admin")]
+    [Authorize(Roles ="Admin")]
     public class CourseBookingController : Controller
     {
         private readonly ICourseBookingService _courseBookingService;
@@ -32,18 +35,22 @@ namespace OnlineCoursePortalWeb.Controllers
             return View(list);
         }
 
-        [Authorize(Roles = "admin")]
-        public async Task<IActionResult> Create()
+       // [Authorize(Roles = "admin")]
+        public async Task<IActionResult> Create(int CourseId)
         {
-
+            TempData["CourseId"] = CourseId;
             return View();
         }
 
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
        [HttpPost]
         
         public async Task<IActionResult> CreateCourseBooking(CourseBookingViewModel courseBookingViewModel)
         {
+            courseBookingViewModel.IsApproved = "Pending";
+            
+            courseBookingViewModel.CourseId = Convert.ToInt32(TempData["CourseId"]);
+
 
             var response = await _courseBookingService.CreateAsync<APIResponse>(courseBookingViewModel);
 
@@ -55,15 +62,30 @@ namespace OnlineCoursePortalWeb.Controllers
 
         [HttpDelete]
 
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         public async Task<ActionResult> Delete(int id)
         {
             await _courseBookingService.DeleteAsync<APIResponse>(id);
             return RedirectToAction("Index");
         }
 
+        public async Task<ActionResult> Updatebyid(int id)
+        {
+            await _courseBookingService.Updatebyid<APIResponse>(id);
+            return RedirectToAction("Index");
+        }
+
+        public async Task<ActionResult> UpdatebyidReject(int id)
+        {
+            await _courseBookingService.UpdatebyidReject<APIResponse>(id);
+            return RedirectToAction("Index");
+        }
+
+
         public async Task<ActionResult> Details(int id)
         {
+
+            ViewData["Bookid"] = id;
             CourseBookingViewModel data=new CourseBookingViewModel();
             ApplicationUserViewModel data1= new ApplicationUserViewModel();
             CourseViewModel data2 = new CourseViewModel();

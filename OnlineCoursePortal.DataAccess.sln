@@ -7,7 +7,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineCoursePortal.DataAcce
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineCoursePortal.API", "OnlineCoursePortal.API\OnlineCoursePortal.API.csproj", "{29D1955D-7335-45D4-8B7D-E503887180EA}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "OnlineCoursePortalWeb", "OnlineCoursePortalWeb\OnlineCoursePortalWeb.csproj", "{27BD3532-A492-4D6F-AE02-49BE1C60B8E2}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "OnlineCoursePortalWeb", "OnlineCoursePortalWeb\OnlineCoursePortalWeb.csproj", "{27BD3532-A492-4D6F-AE02-49BE1C60B8E2}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

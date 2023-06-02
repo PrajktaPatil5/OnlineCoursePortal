@@ -63,6 +63,28 @@ namespace OnlineCoursePortalWeb.Services
         {
             throw new NotImplementedException();
         }
+
+        public Task<T> Updatebyid<T>(int id)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                ApiType = "PUT",
+                Url = courseBookingUrl + "/api/CourseBooking/Approve/" + id
+            }
+                );
+        }
+
+        public Task<T> UpdatebyidReject<T>(int id)
+        {
+            return SendAsync<T>(new APIRequest()
+            {
+                ApiType = "PUT",
+                Url = courseBookingUrl + "/api/CourseBooking/Reject/" + id
+            }
+                );
+
+
+        }
     }
 
 }

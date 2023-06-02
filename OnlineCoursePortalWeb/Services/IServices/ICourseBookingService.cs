@@ -11,5 +11,7 @@ namespace OnlineCoursePortalWeb.Services.IServices
 
         Task<T> DeleteAsync<T>(int id);
         Task<T> Getbyid<T>(int id);
+        Task<T> Updatebyid<T>(int id);
+        Task<T> UpdatebyidReject<T>(int id);
     }
 }

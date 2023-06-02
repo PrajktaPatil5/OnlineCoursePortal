@@ -1,13 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+
 using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services.IServices;
 using System.Data;
 
 namespace OnlineCoursePortalWeb.Controllers
 {
-
+    //[Area("Admin")]
+    [Authorize]
     public class CourseController : Controller
     {
         private readonly ICourseService _courseService;
@@ -28,14 +30,14 @@ namespace OnlineCoursePortalWeb.Controllers
             return View(list);
         }
 
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         public async Task<IActionResult> Create()
         {
 
             return View();
         }
 
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         //[HttpPost]
         
         public async Task<IActionResult> CreateCourse(CourseViewModel courseViewModel)
@@ -49,7 +51,7 @@ namespace OnlineCoursePortalWeb.Controllers
         }
 
 
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         public IActionResult update(int id)
         {
 
@@ -65,7 +67,7 @@ namespace OnlineCoursePortalWeb.Controllers
             return View();
         }
 
-        [Authorize(Roles = "admin")]
+       // [Authorize(Roles = "admin")]
         public async Task<ActionResult> Edit(CourseViewModel courseViewModel)
         {
             await _courseService.UpdateAsync<APIResponse>(courseViewModel);
@@ -76,7 +78,7 @@ namespace OnlineCoursePortalWeb.Controllers
         
       //  [HttpDelete]
        
-       [Authorize(Roles = "admin")]
+      // [Authorize(Roles = "admin")]
       public async Task<ActionResult> Delete(int id)
         {
             await _courseService.DeleteAsync<APIResponse>(id);

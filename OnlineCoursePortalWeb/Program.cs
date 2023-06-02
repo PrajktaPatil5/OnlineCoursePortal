@@ -4,6 +4,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using OnlineCoursePortal.DataAccess.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Identity.UI.Services;
+using OnlineCoursePortal.DataAccess.Models;
 //using OnlineCoursePortalWeb.Data;
 //using OnlineCoursePortal.DataAccess.Data;
 
@@ -14,7 +16,7 @@ var connectionString = builder.Configuration.GetConnectionString("ApplicationDbC
 
 builder.Services.AddDbContext<ApplicationDbContext>(options => options.UseSqlServer(connectionString));
 
-builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
+//builder.Services.AddDefaultIdentity<IdentityUser>(options => options.SignIn.RequireConfirmedAccount = true).AddEntityFrameworkStores<ApplicationDbContext>();
 builder.Services.AddRazorPages();
 // Add services to the container.
 builder.Services.AddHttpClient<ICourseService, CourseService>();
@@ -23,25 +25,26 @@ builder.Services.AddHttpClient<ICourseBookingService, CourseBookingService>();
 builder.Services.AddScoped<ICourseBookingService, CourseBookingService>();
 builder.Services.AddHttpClient<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+
+builder.Services.AddScoped<IEmailSender, EmailSender>();
 builder.Services.AddControllersWithViews();
 
-builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
-    .AddCookie(options =>
-    {
-        options.Cookie.HttpOnly = true;
-        options.ExpireTimeSpan = TimeSpan.FromMinutes(30);
-        options.LoginPath = "/Auth/Login";
-        options.AccessDeniedPath = "/Auth/AccessDenied";
-        options.SlidingExpiration = true;
-    });
+builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
-builder.Services.AddSession(options =>
+builder.Services.ConfigureApplicationCookie(options =>
 {
-    options.IdleTimeout = TimeSpan.FromMinutes(10);
-    options.Cookie.HttpOnly = true;
-    options.Cookie.IsEssential = true;
-
+    options.LoginPath = $"/Identity/Account/Login";
+    options.LogoutPath = $"/Identity/Account/Logout";
+    options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
+
+//builder.Services.AddDistributedMemoryCache();
+//builder.Services.AddSession(options => {
+//    options.IdleTimeout = TimeSpan.FromMinutes(100);
+//    options.Cookie.HttpOnly = true;
+//    options.Cookie.IsEssential = true;
+//});
+
 var app = builder.Build();
 
 
