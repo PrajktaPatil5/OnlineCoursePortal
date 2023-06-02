@@ -164,7 +164,7 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
             }
 
             // If we got this far, something failed, redisplay form
-            6return Page();
+            
         }
 
         private IdentityUser CreateUser()
