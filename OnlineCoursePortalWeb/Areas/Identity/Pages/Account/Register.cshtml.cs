@@ -82,7 +82,7 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
             [EmailAddress]
             [Display(Name = "Email")]
 
-            public string RoleName { get; set; }
+           // public string RoleName { get; set; } = "b0b45eb8-ff36-4ce7-9d80-26b4cca8c32a";
             public string Email { get; set; }
 
             /// <summary>
@@ -108,16 +108,17 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
-            var data = _roleManager.Roles.ToList();
+            ViewData["roles"] = _roleManager.Roles.ToList();
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
         }
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            Input.RoleName = "b0b45eb8-ff36-4ce7-9d80-26b4cca8c32a";
+            string RoleName = "fd7b3761-df3c-45db-be5d-57371bfed823";
             returnUrl ??= Url.Content("~/");
-            var role = _roleManager.FindByIdAsync(Input.RoleName).Result;
+            var role = _roleManager.FindByIdAsync( RoleName).Result;
+            
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
@@ -163,7 +164,8 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
-            return LocalRedirect(returnUrl);
+             return LocalRedirect(returnUrl);
+           // return Page();
 
             // If we got this far, something failed, redisplay form
 
