@@ -18,6 +18,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using ServiceStack;
 
 namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
 {
@@ -162,9 +163,10 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
                     ModelState.AddModelError(string.Empty, error.Description);
                 }
             }
+            return LocalRedirect(returnUrl);
 
             // If we got this far, something failed, redisplay form
-            
+
         }
 
         private IdentityUser CreateUser()
@@ -189,5 +191,7 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
             }
             return (IUserEmailStore<IdentityUser>)_userStore;
         }
+       
     }
+   
 }
