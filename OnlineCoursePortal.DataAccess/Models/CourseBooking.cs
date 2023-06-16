@@ -17,10 +17,6 @@ namespace OnlineCoursePortal.DataAccess.Models
 
         [Required(ErrorMessage = "UserEmail is required.")]
         public string UserEmail { get; set; }
-
-        
-     
-       
         public string IsApproved { get; set; }
 
     }

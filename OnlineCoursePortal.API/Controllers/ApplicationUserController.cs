@@ -80,7 +80,7 @@ namespace OnlineCoursePortal.API.Controllers
             }
             _response.StatusCode = System.Net.HttpStatusCode.OK;
             _response.IsSuccess = true;
-            _response.Result = loginResponse;
+            _response.Result = loginResponse.Token;
             return Ok(_response);
         }
 

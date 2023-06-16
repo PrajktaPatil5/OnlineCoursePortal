@@ -29,14 +29,17 @@ namespace OnlineCoursePortal.API.Controllers
             this._APIResponse = new APIResponse();
         }
         [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             var result = _courseBookingRepository.Get();
-            var pendingdata = result.Where(x => x.IsApproved == "Pending");
-            _APIResponse.Result = pendingdata;
+           // var pendingdata = result.Where(x => x.IsApproved == "Pending");
+            _APIResponse.Result = result;
             return Ok(_APIResponse);
         }
+
         [HttpPost]
+        [Authorize(Roles = "ApplicationUser")]
         public IActionResult Create(CourseBooking courseBooking)
         {
          
@@ -48,16 +51,19 @@ namespace OnlineCoursePortal.API.Controllers
             _courseRepository.Save();
             return Ok();
         }
+
         [HttpPut]
+        [Authorize(Roles = "ApplicationUser")]
         public IActionResult Update(CourseBooking courseBooking)
         {
             _courseBookingRepository.Update(courseBooking);
             _courseBookingRepository.Save();
             return Ok();
         }
-        //[Authorize(Roles = "admin")]
+       
 
         [HttpDelete("{Id:int}")]
+        [Authorize(Roles = "ApplicationUser")]
         public IActionResult Delete(int Id)
         {
             _courseBookingRepository.Delete(Id);
@@ -67,6 +73,7 @@ namespace OnlineCoursePortal.API.Controllers
 
 
         [HttpGet("{id:int}")]
+        [Authorize]
         public IActionResult Getbyid(int id)
         {
             var data = _applicationDbContext.CourseBookings.Find(id);
@@ -75,6 +82,7 @@ namespace OnlineCoursePortal.API.Controllers
         }
 
         [HttpPut("Approve/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult Updatebyid(int id)
         {
             var data = _applicationDbContext.CourseBookings.Find(id);
@@ -87,6 +95,7 @@ namespace OnlineCoursePortal.API.Controllers
         }
 
         [HttpPut("Reject/{id:int}")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdatebyidReject(int id)
         {
             var data = _applicationDbContext.CourseBookings.Find(id);

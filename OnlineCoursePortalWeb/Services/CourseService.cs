@@ -1,5 +1,6 @@
 ﻿using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services.IServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OnlineCoursePortalWeb.Services
 {
@@ -14,55 +15,61 @@ namespace OnlineCoursePortalWeb.Services
             courseUrl = configuration.GetValue<string>("ServiceUrls:Course");
         }
 
-        public Task<T> GetAllAsync<T>()
+        public Task<T> GetAllAsync<T>(string token)
         {
+            
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "GET",
                 
-                Url = courseUrl + "/api/Course"
+                Url = courseUrl + "/api/Course",
+                Token = token
 
-            });
+        });
         }
 
-        public Task<T> CreateAsync<T>(CourseViewModel courseViewModel)
+        public Task<T> CreateAsync<T>(CourseViewModel courseViewModel, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "POST",
                 Data = courseViewModel,
-                Url = courseUrl + "/api/Course"
+                Url = courseUrl + "/api/Course",
+                Token = token
                 
             });
         }
 
-        public Task<T> DeleteAsync<T>(int id)
+        public Task<T> DeleteAsync<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "DELETE",
-                Url = courseUrl + "/api/Course/"+ id
+                Url = courseUrl + "/api/Course/"+ id,
+                Token = token
                
             });
         }
 
-        public Task<T> UpdateAsync<T>(CourseViewModel courseViewModel)
+        public Task<T> UpdateAsync<T>(CourseViewModel courseViewModel, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "PUT",
               
                 Url = courseUrl + "/api/Course",
-                Data = courseViewModel
+                Data = courseViewModel,
+                Token = token
             });
         }
 
-        public Task<T> Getbyid<T>(int id)
+        public Task<T> Getbyid<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "GET",
                 Url = courseUrl + "/api/Course/" + id,
+                Token = token
 
             });
         }

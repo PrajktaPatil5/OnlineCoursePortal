@@ -13,35 +13,39 @@ namespace OnlineCoursePortalWeb.Services
             courseBookingUrl = configuration.GetValue<string>("ServiceUrls:Course");
         }
 
-        public Task<T> GetAllAsync<T>()
+        public Task<T> GetAllAsync<T>(string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "GET",
 
-                Url = courseBookingUrl + "/api/CourseBooking"
+                Url = courseBookingUrl + "/api/CourseBooking",
+                   Token = token
 
             });
         }
 
-        public Task<T> CreateAsync<T>(CourseBookingViewModel courseBookingViewModel)
+        public Task<T> CreateAsync<T>(CourseBookingViewModel courseBookingViewModel, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "POST",
                
                 Url = courseBookingUrl + "/api/CourseBooking",
-                Data = courseBookingViewModel
+                Data = courseBookingViewModel,
+                Token = token
 
             });
         }
 
-        public Task<T> DeleteAsync<T>(int id)
+        public Task<T> DeleteAsync<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "DELETE",
-                Url = courseBookingUrl + "/api/CourseBooking/" + id
+                Url = courseBookingUrl + "/api/CourseBooking/" + id,
+                Token = token
+                
 
 
             });
@@ -49,12 +53,13 @@ namespace OnlineCoursePortalWeb.Services
 
        
 
-        public Task<T> Getbyid<T>(int id)
+        public Task<T> Getbyid<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "GET",
                 Url = courseBookingUrl + "/api/CourseBooking/" + id,
+                Token = token
 
             });
         }
@@ -62,24 +67,27 @@ namespace OnlineCoursePortalWeb.Services
         public Task<T> UpdateAsync<T>(CourseBookingViewModel courseBookingViewModel)
         {
             throw new NotImplementedException();
+            
         }
 
-        public Task<T> Updatebyid<T>(int id)
+        public Task<T> Updatebyid<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "PUT",
-                Url = courseBookingUrl + "/api/CourseBooking/Approve/" + id
+                Url = courseBookingUrl + "/api/CourseBooking/Approve/" + id,
+                Token = token
             }
                 );
         }
 
-        public Task<T> UpdatebyidReject<T>(int id)
+        public Task<T> UpdatebyidReject<T>(int id, string token)
         {
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "PUT",
-                Url = courseBookingUrl + "/api/CourseBooking/Reject/" + id
+                Url = courseBookingUrl + "/api/CourseBooking/Reject/" + id,
+                Token = token
             }
                 );
 

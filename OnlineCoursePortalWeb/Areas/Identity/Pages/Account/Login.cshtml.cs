@@ -14,6 +14,13 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
+using OnlineCoursePortalWeb.Services.IServices;
+using OnlineCoursePortal.DataAccess.Models;
+using OnlineCoursePortalWeb.Models;
+using APIResponse = OnlineCoursePortalWeb.Models.APIResponse;
+using NuGet.Common;
+using Token = OnlineCoursePortalWeb.Models.Token;
+using Azure;
 
 namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
 {
@@ -21,11 +28,13 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
     {
         private readonly SignInManager<IdentityUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
+        private readonly IApplicationUserService _applicationUserService;
 
-        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger)
+        public LoginModel(SignInManager<IdentityUser> signInManager, ILogger<LoginModel> logger, IApplicationUserService applicationUserService)
         {
             _signInManager = signInManager;
             _logger = logger;
+            _applicationUserService = applicationUserService;
         }
 
         /// <summary>
@@ -114,7 +123,17 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
                 var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
-                bool dat=    _signInManager.IsSignedIn(User);
+                    LoginRequestViewModel loginRequestViewModel = new LoginRequestViewModel()
+                    {
+                        UserName = Input.Email,
+                        Password = Input.Password,
+
+                    };
+               var data =_applicationUserService.LoginAsync<APIResponse>(loginRequestViewModel);
+                  string a = Convert.ToString(data.Result.Result);
+                    HttpContext.Session.SetString(Token.SessionToken, a);
+
+                    bool dat =    _signInManager.IsSignedIn(User);
 
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);

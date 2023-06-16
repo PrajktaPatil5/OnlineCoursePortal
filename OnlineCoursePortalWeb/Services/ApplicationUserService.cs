@@ -1,5 +1,6 @@
 ﻿using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services.IServices;
+using System.Security.Policy;
 
 namespace OnlineCoursePortalWeb.Services
 {
@@ -25,12 +26,23 @@ namespace OnlineCoursePortalWeb.Services
 
         public Task<T> LoginAsync<T>(LoginRequestViewModel loginRequestViewModel)
         {
-            throw new NotImplementedException();
+            return SendAsync<T>(new APIRequest()
+            {
+                Url = CourseBookingUrl + "/api/ApplicationUser/login",
+                ApiType = "POST",
+                Data = loginRequestViewModel
+            });
         }
 
         public Task<T> RegisterAsync<T>(ApplicationUserViewModel applicationUserViewModel)
         {
-            throw new NotImplementedException();
+            return SendAsync<T>(new APIRequest()
+            {
+                Url = CourseBookingUrl + "/api/ApplicationUser/register",
+                ApiType = "POST",
+                Data = applicationUserViewModel
+            });
+            
         }
     }
 }

@@ -53,10 +53,10 @@ namespace OnlineCoursePortalWeb.Services
 
                     HttpResponseMessage apiResponse = null;
 
-                //if (string.IsNullOrEmpty(apiRequest.Token))
-                //{
-                //    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiRequest.Token);
-                //}
+                if ((apiRequest.Token)!=null)
+                {
+                    client.DefaultRequestHeaders.Authorization = new System.Net.Http.Headers.AuthenticationHeaderValue("Bearer", apiRequest.Token);
+                }
 
                 apiResponse = await client.SendAsync(message);
                     var apiContent = await apiResponse.Content.ReadAsStringAsync();

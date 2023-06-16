@@ -24,6 +24,7 @@ builder.Services.AddControllers();
 builder.Services.AddScoped<ICourseRepository, CourseRepository>();
 builder.Services.AddScoped<ICourseBookingRepository, CourseBookingRepository>();
 builder.Services.AddScoped<IApplicationUserRepository, ApplicationUserRepository>();
+builder.Services.AddScoped<IEmployeeRepository, EmployeeRepository>();
 builder.Services.AddTransient<ApplicationDbContext>();
 
 var key = builder.Configuration.GetValue<string>("ApiSettings:Secret");

@@ -25,9 +25,14 @@ builder.Services.AddHttpClient<ICourseBookingService, CourseBookingService>();
 builder.Services.AddScoped<ICourseBookingService, CourseBookingService>();
 builder.Services.AddHttpClient<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
+builder.Services.AddHttpClient<IEmployeeService, EmployeeService>();
+builder.Services.AddScoped<IEmployeeService, EmployeeService>();
+
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
+
 builder.Services.AddControllersWithViews();
+builder.Services.AddSession();
 
 builder.Services.AddIdentity<IdentityUser, IdentityRole>().AddEntityFrameworkStores<ApplicationDbContext>().AddDefaultTokenProviders();
 
@@ -38,12 +43,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = $"/Identity/Account/AccessDenied";
 });
 
-//builder.Services.AddDistributedMemoryCache();
-//builder.Services.AddSession(options => {
-//    options.IdleTimeout = TimeSpan.FromMinutes(100);
-//    options.Cookie.HttpOnly = true;
-//    options.Cookie.IsEssential = true;
-//});
+
 
 var app = builder.Build();
 
@@ -63,8 +63,10 @@ app.UseRouting();
 app.MapRazorPages();
 app.UseAuthentication();
 app.UseAuthorization();
+
+app.UseSession();
 app.MapControllerRoute(
     name: "default",
-    pattern: "{controller=Course}/{action=Index}/{id?}");
+    pattern: "{controller=Home}/{action=Index}/{id?}");
 
 app.Run();

@@ -11,5 +11,9 @@ namespace OnlineCoursePortalWeb.Controllers
         {
             _applicationUserService = applicationUserService;
         }
+        public IActionResult Index()
+        {
+            return View();
+        }
     }
 }

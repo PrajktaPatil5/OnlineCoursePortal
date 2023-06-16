@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
-//using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using OnlineCoursePortal.DataAccess.Models;
 using System;
@@ -16,6 +15,8 @@ namespace OnlineCoursePortal.DataAccess.Data
         public DbSet<Course> Courses { get; set; }
         public DbSet<CourseBooking> CourseBookings { get; set; }
         public DbSet<ApplicationUser> ApplicationUsers { get; set; }
+
+        public DbSet<Employee> Employees { get; set; }
 
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
         : base(options)

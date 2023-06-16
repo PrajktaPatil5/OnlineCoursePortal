@@ -9,8 +9,8 @@ using System.Data;
 
 namespace OnlineCoursePortalWeb.Controllers
 {
-    //[Area("Admin")]
-    [Authorize(Roles ="Admin")]
+   
+    
     public class CourseBookingController : Controller
     {
         private readonly ICourseBookingService _courseBookingService;
@@ -23,11 +23,13 @@ namespace OnlineCoursePortalWeb.Controllers
             _courseService = courseService;
            _applicationUserService = applicationUserService;
         }
+        [Authorize]
         public async Task<IActionResult> Index()
         {
+            string token = HttpContext.Session.GetString(Token.SessionToken);
             List<CourseBookingViewModel> list = new();
 
-            var response = await _courseBookingService.GetAllAsync<APIResponse>();
+            var response = await _courseBookingService.GetAllAsync<APIResponse>(token);
             if (response != null && response.IsSuccess)
             {
                 list = JsonConvert.DeserializeObject<List<CourseBookingViewModel>>(Convert.ToString(response.Result));
@@ -35,25 +37,27 @@ namespace OnlineCoursePortalWeb.Controllers
             return View(list);
         }
 
-       // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "ApplicationUser")]
         public async Task<IActionResult> Create(int CourseId)
         {
+            string token = HttpContext.Session.GetString(Token.SessionToken);
             TempData["CourseId"] = CourseId;
             return View();
         }
 
-       // [Authorize(Roles = "admin")]
-       [HttpPost]
+        [Authorize(Roles = "ApplicationUser")]
+        [HttpPost]
         
         public async Task<IActionResult> CreateCourseBooking(CourseBookingViewModel courseBookingViewModel)
         {
+            string token = HttpContext.Session.GetString(Token.SessionToken);
             courseBookingViewModel.IsApproved = "Pending";
-            
+            courseBookingViewModel.UserEmail = User.Identity.Name;
             courseBookingViewModel.CourseId = Convert.ToInt32(TempData["CourseId"]);
 
 
-            var response = await _courseBookingService.CreateAsync<APIResponse>(courseBookingViewModel);
-
+            var response = await _courseBookingService.CreateAsync<APIResponse>(courseBookingViewModel, token);
+            TempData["success"] = "coursebooking Created successfully";
 
             return RedirectToAction(nameof(Index));
         }
@@ -62,34 +66,42 @@ namespace OnlineCoursePortalWeb.Controllers
 
         [HttpDelete]
 
-       // [Authorize(Roles = "admin")]
+        [Authorize(Roles = "ApplicationUser")]
         public async Task<ActionResult> Delete(int id)
         {
-            await _courseBookingService.DeleteAsync<APIResponse>(id);
+            string token = HttpContext.Session.GetString(Token.SessionToken);
+            await _courseBookingService.DeleteAsync<APIResponse>(id, token);
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> Updatebyid(int id)
         {
-            await _courseBookingService.Updatebyid<APIResponse>(id);
+            string token = HttpContext.Session.GetString(Token.SessionToken);
+            await _courseBookingService.Updatebyid<APIResponse>(id,token);
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "Admin")]
         public async Task<ActionResult> UpdatebyidReject(int id)
         {
-            await _courseBookingService.UpdatebyidReject<APIResponse>(id);
+            string token = HttpContext.Session.GetString(Token.SessionToken);
+            await _courseBookingService.UpdatebyidReject<APIResponse>(id, token);
+            TempData["success"] = "coursebooking Rejected successfully";
             return RedirectToAction("Index");
         }
 
-
+        [Authorize]
         public async Task<ActionResult> Details(int id)
         {
+            string token = HttpContext.Session.GetString(Token.SessionToken);
 
             ViewData["Bookid"] = id;
             CourseBookingViewModel data=new CourseBookingViewModel();
             ApplicationUserViewModel data1= new ApplicationUserViewModel();
             CourseViewModel data2 = new CourseViewModel();
-         var response=   _courseBookingService.Getbyid<APIResponse>(id);
+          
+            var response=   _courseBookingService.Getbyid<APIResponse>(id,token);
 
             if(response != null)
             {
@@ -101,7 +113,8 @@ namespace OnlineCoursePortalWeb.Controllers
             {
                 data1 = JsonConvert.DeserializeObject<ApplicationUserViewModel>(Convert.ToString(response2.Result.Result));
             }
-          var response3 = _courseService.Getbyid<APIResponse>(data.CourseId);
+           
+            var response3 = _courseService.Getbyid<APIResponse>(data.CourseId,token);
 
             if(response3 != null)
             {

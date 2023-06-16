@@ -18,7 +18,11 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.AspNetCore.WebUtilities;
 using Microsoft.Extensions.Logging;
+using OnlineCoursePortal.DataAccess.Models;
+using OnlineCoursePortalWeb.Models;
+using OnlineCoursePortalWeb.Services.IServices;
 using ServiceStack;
+using APIResponse = OnlineCoursePortal.DataAccess.Models.APIResponse;
 
 namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
 {
@@ -31,8 +35,10 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
         private readonly ILogger<RegisterModel> _logger;
         private readonly IEmailSender _emailSender;
         private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IApplicationUserService _applicationUserService;
 
         public RegisterModel(
+            IApplicationUserService applicationUserService,
             UserManager<IdentityUser> userManager,
             IUserStore<IdentityUser> userStore,
             SignInManager<IdentityUser> signInManager,
@@ -40,6 +46,7 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
             IEmailSender emailSender,
             RoleManager<IdentityRole>roleManager)
         {
+            _applicationUserService= applicationUserService;
             _userManager = userManager;
             _userStore = userStore;
             _emailStore = GetEmailStore();
@@ -78,12 +85,18 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
             ///     directly from your code. This API may change or be removed in future releases.
             /// </summary>
+            public string Name { get; set; }
+            public string RoleName { get;set; }
+
             [Required]
             [EmailAddress]
             [Display(Name = "Email")]
 
            // public string RoleName { get; set; } = "b0b45eb8-ff36-4ce7-9d80-26b4cca8c32a";
+
+           
             public string Email { get; set; }
+
 
             /// <summary>
             ///     This API supports the ASP.NET Core Identity default UI infrastructure and is not intended to be used
@@ -108,6 +121,16 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
 
         public async Task OnGetAsync(string returnUrl = null)
         {
+
+            if (!_roleManager.RoleExistsAsync(Roles.Role_ApplicationUser).GetAwaiter().GetResult())
+            {
+                _roleManager.CreateAsync(new IdentityRole(Roles.Role_ApplicationUser)).GetAwaiter().GetResult();
+
+                _roleManager.CreateAsync(new IdentityRole(Roles.Role_Admin)).GetAwaiter().GetResult();
+
+            }
+
+
             ViewData["roles"] = _roleManager.Roles.ToList();
             ReturnUrl = returnUrl;
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -115,15 +138,25 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
 
         public async Task<IActionResult> OnPostAsync(string returnUrl = null)
         {
-            string RoleName = "fd7b3761-df3c-45db-be5d-57371bfed823";
+            var role = _roleManager.FindByIdAsync(Input.RoleName).Result;
+            
             returnUrl ??= Url.Content("~/");
-            var role = _roleManager.FindByIdAsync( RoleName).Result;
+       
             
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
             if (ModelState.IsValid)
             {
+                ApplicationUserViewModel applicationUserViewModel = new ApplicationUserViewModel()
+                {
+                    Name = Input.Name,
+                    Email = Input.Email,
+                    Password = Input.Password,
+                    Role = role.Name
+                };
+
+                _applicationUserService.RegisterAsync<APIResponse>(applicationUserViewModel);
                 //   var user = CreateUser();
-                var user = new IdentityUser()
+                var user = new IdentityUser
                 {
                     Email = Input.Email,
                     UserName = Input.Email
@@ -165,8 +198,7 @@ namespace OnlineCoursePortalWeb.Areas.Identity.Pages.Account
                 }
             }
              return LocalRedirect(returnUrl);
-           // return Page();
-
+          
             // If we got this far, something failed, redisplay form
 
         }

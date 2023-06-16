@@ -8,9 +8,12 @@
 <h1>Course</h1>
 
 <p>
+    @if (User.IsInRole("ApplicationUser"))
+  {
     <a type="button" class="btn btn-warning" asp-action="Create" asp-controller="Course">Create Course</a>
+  }
 </p>
-<table class="table">
+<table id="tblData" class="table table-bordered table-striped" style="width:100%">
     <thead>
         <tr>
             @*<th>
@@ -35,34 +38,39 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            @*<td>
-                @Html.DisplayFor(modelItem => item.Id)
+        @foreach (var item in Model)
+        {
+            <tr>
+                @*<td>
+            @Html.DisplayFor(modelItem => item.Id)
             </td>*@
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseName)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CourseDescription)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.StartDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.EndDate)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.AvailableSeats)
-            </td>
-            <td>
-                    <a type="button" class="btn btn-warning" asp-action="Create" asp-controller="CourseBooking" asp-route-CourseId="@item.Id">Book</a>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseName)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.CourseDescription)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.StartDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.EndDate)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.AvailableSeats)
+                </td>
+                <td>
+                    @if (User.IsInRole("ApplicationUser"))
+                    {
+                     <a type="button" class="btn btn-warning" asp-action="Create" asp-controller="CourseBooking" asp-route-CourseId="@item.Id">Book</a>
+               
+                        <a type="button" class="btn btn-warning" asp-action="Update" asp-controller="Course" asp-route-id="@item.Id">Edit</a>
 
-                    <a type="button" class="btn btn-warning" asp-action="Update" asp-controller="Course" asp-route-id="@item.Id">Edit</a>
-
-                    <a type="button" class="btn btn-danger" asp-action="Delete" asp-controller="Course" asp-route-id="@item.Id">Delete</a>
-            </td>
-        </tr>
-}
+                        <a type="button" class="btn btn-danger" asp-action="Delete" asp-controller="Course" asp-route-id="@item.Id">Delete</a>
+                    }
+                </td>
+            </tr>
+        }
     </tbody>
+   
 </table>

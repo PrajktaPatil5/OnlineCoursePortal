@@ -11,6 +11,7 @@ namespace OnlineCoursePortal.API.Controllers
 
     [Route("api/[controller]")]
     [ApiController]
+    
     public class CourseController : Controller
     {
         private readonly ApplicationDbContext _applicationDbContext;
@@ -21,38 +22,50 @@ namespace OnlineCoursePortal.API.Controllers
         {
             _applicationDbContext = applicationDbContext;
             _courseRepository = courseRepository;
-            this._APIResponse = new APIResponse();
+            _APIResponse = new APIResponse();
         }
+
         [HttpGet]
+        [Authorize]
         public IActionResult Get()
         {
             var result = _courseRepository.Get();
             _APIResponse.Result = result;
             return Ok(_APIResponse);
         }
+
         [HttpPost]
+        [Authorize(Roles = "ApplicationUser")]
         public IActionResult Create(Course course)
         {
             _courseRepository.Create(course);
             _courseRepository.Save();
             return Ok();
         }
+
         [HttpPut]
+        [Authorize(Roles = "ApplicationUser")]
+
         public IActionResult Update(Course course)
         {
             _courseRepository.Update(course);
             _courseRepository.Save();
             return Ok();
         }
+
+     
         [HttpDelete("{Id:int}")]
-       
+        [Authorize(Roles = "ApplicationUser")]
+
         public IActionResult Delete(int Id)
         {
             _courseRepository.Delete(Id);
             _courseRepository.Save();
             return Ok();
         }
+
         [HttpGet("{Id:int}")]
+       [Authorize]
         public IActionResult Getbyid(int Id)
         {
            var data= _applicationDbContext.Courses.Find(Id);
