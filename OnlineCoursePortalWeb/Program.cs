@@ -6,6 +6,9 @@ using OnlineCoursePortal.DataAccess.Data;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using OnlineCoursePortal.DataAccess.Models;
+using Microsoft.Extensions.DependencyInjection;
+using OnlineCoursePortalWeb;
+using OnlineCoursePortalWeb.ViewComponents;
 //using OnlineCoursePortalWeb.Data;
 //using OnlineCoursePortal.DataAccess.Data;
 
@@ -27,7 +30,8 @@ builder.Services.AddHttpClient<IApplicationUserService, ApplicationUserService>(
 builder.Services.AddScoped<IApplicationUserService, ApplicationUserService>();
 builder.Services.AddHttpClient<IEmployeeService, EmployeeService>();
 builder.Services.AddScoped<IEmployeeService, EmployeeService>();
-
+builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddScoped<CountdownViewComponent>();
 
 builder.Services.AddScoped<IEmailSender, EmailSender>();
 

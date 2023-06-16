@@ -1,4 +1,6 @@
-﻿using OnlineCoursePortalWeb.Models;
+﻿using AutoMapper;
+using OnlineCoursePortal.DataAccess.Models;
+using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services.IServices;
 using static System.Runtime.InteropServices.JavaScript.JSType;
 
@@ -9,9 +11,11 @@ namespace OnlineCoursePortalWeb.Services
     {
         private readonly IHttpClientFactory _clientFactory;
         private string courseUrl;
-        public CourseService(IHttpClientFactory clientFactory, IConfiguration configuration) : base(clientFactory)
+        private readonly IMapper _mapper;
+        public CourseService(IHttpClientFactory clientFactory, IConfiguration configuration, IMapper mapper) : base(clientFactory)
         {
             _clientFactory = clientFactory;
+            _mapper = mapper;
             courseUrl = configuration.GetValue<string>("ServiceUrls:Course");
         }
 
@@ -30,10 +34,12 @@ namespace OnlineCoursePortalWeb.Services
 
         public Task<T> CreateAsync<T>(CourseViewModel courseViewModel, string token)
         {
+            var data = _mapper.Map<Course>(courseViewModel);
             return SendAsync<T>(new APIRequest()
             {
-                ApiType = "POST",
-                Data = courseViewModel,
+              
+            ApiType = "POST",
+                Data = data,
                 Url = courseUrl + "/api/Course",
                 Token = token
                 
@@ -53,12 +59,13 @@ namespace OnlineCoursePortalWeb.Services
 
         public Task<T> UpdateAsync<T>(CourseViewModel courseViewModel, string token)
         {
+            var data = _mapper.Map<Course>(courseViewModel);
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "PUT",
               
                 Url = courseUrl + "/api/Course",
-                Data = courseViewModel,
+                Data = data,
                 Token = token
             });
         }
@@ -72,6 +79,11 @@ namespace OnlineCoursePortalWeb.Services
                 Token = token
 
             });
+        }
+
+        public Task<T> GetAllAsync<T>()
+        {
+            throw new NotImplementedException();
         }
     }
 }

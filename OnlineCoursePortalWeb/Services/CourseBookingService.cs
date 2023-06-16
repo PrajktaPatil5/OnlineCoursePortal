@@ -1,5 +1,8 @@
-﻿using OnlineCoursePortalWeb.Models;
+﻿using AutoMapper;
+using OnlineCoursePortal.DataAccess.Models;
+using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services.IServices;
+using static System.Runtime.InteropServices.JavaScript.JSType;
 
 namespace OnlineCoursePortalWeb.Services
 {
@@ -7,9 +10,11 @@ namespace OnlineCoursePortalWeb.Services
     {
         private readonly IHttpClientFactory _clientFactory;
         private string courseBookingUrl;
-        public CourseBookingService(IHttpClientFactory clientFactory, IConfiguration configuration) : base(clientFactory)
+        private readonly IMapper _mapper;
+        public CourseBookingService(IHttpClientFactory clientFactory, IConfiguration configuration, IMapper mapper ) : base(clientFactory)
         {
             _clientFactory = clientFactory;
+            _mapper = mapper;
             courseBookingUrl = configuration.GetValue<string>("ServiceUrls:Course");
         }
 
@@ -27,12 +32,12 @@ namespace OnlineCoursePortalWeb.Services
 
         public Task<T> CreateAsync<T>(CourseBookingViewModel courseBookingViewModel, string token)
         {
+            var data = _mapper.Map<CourseBooking>(courseBookingViewModel);
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "POST",
-               
                 Url = courseBookingUrl + "/api/CourseBooking",
-                Data = courseBookingViewModel,
+                Data = data,
                 Token = token
 
             });
@@ -72,6 +77,7 @@ namespace OnlineCoursePortalWeb.Services
 
         public Task<T> Updatebyid<T>(int id, string token)
         {
+            
             return SendAsync<T>(new APIRequest()
             {
                 ApiType = "PUT",

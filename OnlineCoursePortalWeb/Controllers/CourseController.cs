@@ -1,10 +1,13 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using NuGet.Common;
+using OnlineCoursePortal.DataAccess.Models;
 using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services.IServices;
 using System.Data;
+using APIResponse = OnlineCoursePortalWeb.Models.APIResponse;
 using Token = OnlineCoursePortalWeb.Models.Token;
 
 namespace OnlineCoursePortalWeb.Controllers
@@ -14,10 +17,11 @@ namespace OnlineCoursePortalWeb.Controllers
     public class CourseController : Controller
     {
         private readonly ICourseService _courseService;
-
-        public CourseController(ICourseService courseService)
+        private readonly IMapper _mapper;
+        public CourseController(ICourseService courseService, IMapper mapper)
         {
             _courseService = courseService;
+            _mapper = mapper;
         }
 
         [Authorize]
@@ -43,13 +47,14 @@ namespace OnlineCoursePortalWeb.Controllers
         
         public async Task<IActionResult> CreateCourse(CourseViewModel courseViewModel)
         {
+          // var data= _mapper.Map<Course>(courseViewModel);
             string token = HttpContext.Session.GetString(Token.SessionToken);
 
             var response = await _courseService.CreateAsync<APIResponse>(courseViewModel, token);
             TempData["success"] = "course created successfully";
 
-
             return RedirectToAction(nameof(Index));
+          
 
         }
 
@@ -65,6 +70,7 @@ namespace OnlineCoursePortalWeb.Controllers
             {
                 CourseViewModel courseViewModel = JsonConvert.DeserializeObject<CourseViewModel>(data);
                 return View(courseViewModel);
+               
             }
            
 
