@@ -79,6 +79,7 @@ namespace OnlineCoursePortalWeb.Controllers
         {
             string token = HttpContext.Session.GetString(Token.SessionToken);
             await _courseBookingService.Updatebyid<APIResponse>(id,token);
+            TempData["success"] = "coursebooking Approved successfully";
             return RedirectToAction("Index");
         }
 

@@ -29,11 +29,11 @@ namespace OnlineCoursePortalWeb.ViewComponents
 
 
 
-            Course firstEvent = model.OrderBy(e => e.StartDate).FirstOrDefault();
+            Course firstEvent = model.OrderBy(e => e.EndDate).FirstOrDefault();
 
             if (firstEvent != null)
             {
-                var countdownTime = DateTime.UtcNow- firstEvent.StartDate ;
+                var countdownTime =  firstEvent.EndDate - DateTime.UtcNow;
                 
                 return View("Default", countdownTime);
             }
