@@ -1,7 +1,9 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using OnlineCoursePortal.DataAccess.Models;
+using OnlineCoursePortalWeb.Models;
 using OnlineCoursePortalWeb.Services.IServices;
+using APIResponse = OnlineCoursePortalWeb.Models.APIResponse;
 
 namespace OnlineCoursePortalWeb.ViewComponents
 {
@@ -17,8 +19,9 @@ namespace OnlineCoursePortalWeb.ViewComponents
 
         public async Task<IViewComponentResult> InvokeAsync()
         {
+            string token = HttpContext.Session.GetString(Token.SessionToken);
 
-            var courses = await _courseService.GetAllAsync<APIResponse>();
+            var courses = await _courseService.GetAllAsync<APIResponse>(token);
 
 
             List<Course> model = JsonConvert.DeserializeObject<List<Course>>(Convert.ToString(courses.Result));
@@ -30,7 +33,7 @@ namespace OnlineCoursePortalWeb.ViewComponents
 
             if (firstEvent != null)
             {
-                var countdownTime = firstEvent.StartDate - DateTime.UtcNow;
+                var countdownTime = DateTime.UtcNow- firstEvent.StartDate ;
                 
                 return View("Default", countdownTime);
             }
